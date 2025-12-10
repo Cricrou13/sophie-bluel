@@ -7,6 +7,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="./script.js" defer></script>
@@ -16,10 +17,10 @@
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
-			<li>projets</li>
-			<li>contact</li>
-			<li>login</li>
-			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+			<li><a href="index.html">projets</a></li>
+            <li><a href="index.html#contact">contact</a></li>
+            <li><a href="login.html" id="nav-Login">Login</a style="font-weight: bold;"></li>
+            <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
 </header>
@@ -35,9 +36,11 @@
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
 	</section>
-	<section id="portfolio">
+	<div class ="title-container">
 		<h2>Mes Projets</h2>
-		<div class="filters-buttons">
+			<a button class="edit-btn"><i class="fa-regular fa-pen-to-square"></i> Modifier</button></a>
+	</div>
+		<div class="filters-container">
 		</div>
 
 		<div class="gallery">
