@@ -11,10 +11,10 @@ async function init() {
     const categoriesResponse = await fetch("http://localhost:5678/api/categories");
     categories = await categoriesResponse.json();
 
-    // On affiche la galerie (tout le monde la voit)
+    // On affiche la galerie
     displayWorks(works);
 
-    // C'est elle qui décidera d'afficher ou cacher les filtres
+    // afficher ou cacher les filtres
     checkLoginAndDisplayFilters();
 
   } catch (error) {
@@ -50,14 +50,14 @@ function displayWorks(filteredWorks) {
 function displayFilters(categories) {
   const filtersContainer = document.querySelector(".filters-container");
 
-  // Sécurité : si pas de conteneur, on s'arrête
+  // si pas de conteneur, on s'arrête
   if (!filtersContainer) {
     return;
   }
 
   filtersContainer.innerHTML = "";
 
-  // Bouton Tous
+  // Boutons
   const allButton = document.createElement("button");
   allButton.textContent = "Tous";
   allButton.classList.add("filters-buttons");
@@ -96,7 +96,11 @@ function checkLoginAndDisplayFilters() {
   
   const loginLink = document.getElementById("nav-login") || document.querySelector('nav ul li a[href="login.html"]');
 
-  const editBtn = document.querySelector(".edit-btn");
+  const editBtn = document.querySelector(".editBtn");
+
+  const editionBtn = document.getElementById("editionBtn");
+
+  console.log("editionBtn :", editionBtn);
 
   if (token) {
     // --- CONNECTÉ ---
@@ -123,6 +127,10 @@ function checkLoginAndDisplayFilters() {
       });
     }
 
+    if (editBtn) {
+      editBtn.classList.remove("hidden");
+    }
+
   } else {
     // --- NON CONNECTÉ ---
     console.log("Mode visiteur activé");
@@ -142,6 +150,10 @@ function checkLoginAndDisplayFilters() {
     if (loginLink) {
       loginLink.textContent = "login";
       loginLink.href = "login.html";
+    }
+
+    if (editionBtn) {
+      editionBtn.classList.add("hidden");
     }
   }
 }

@@ -3,16 +3,16 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const errorMessage = document.getElementById("error-message"); // La balise <p> vide
 
-// 2. Écoute de l'événement
+// Écoute de l'événement
 form.addEventListener("submit", async (event) => {
-  event.preventDefault(); // Empêche le rechargement de la page
+  event.preventDefault();
 
   // Récupération des valeurs
   const userEmail = emailInput.value;
   const userPassword = passwordInput.value;
 
   try {
-    // 3. Appel à l'API
+    // Appel à l'API
     const response = await fetch("http://localhost:5678/api/users/login", {
       method: "POST",
       headers: {
@@ -24,7 +24,7 @@ form.addEventListener("submit", async (event) => {
       }),
     });
 
-    // 4. Gestion de la réponse
+    // Gestion de la réponse
     if (response.ok) {
       // --- SUCCÈS ---
       const data = await response.json();
@@ -38,8 +38,8 @@ form.addEventListener("submit", async (event) => {
       window.location.href = "index.html";
     } else {
       // --- ERREUR (Mauvais mot de passe / email) ---
-      errorMessage.style.display = "block"; // Affiche le message
-      emailInput.classList.add("input-error"); // Ajoute une bordure rouge (via CSS)
+      errorMessage.style.display = "block";
+      emailInput.classList.add("input-error");
       passwordInput.classList.add("input-error");
     }
   } catch (error) {

@@ -64,6 +64,20 @@ body {
 	font-size: 14px;
 }
 
+#editionBtn {
+	display: flex;
+	justify-content: center;
+	z-index: 1000;
+	margin-top: 20px 0;
+	background-color: black;
+	color: white;
+	padding: 10px 0;
+}
+
+.hidden {
+	display: none !important;
+}
+
 header {
 	justify-content: space-between;
 	margin: 50px 0
@@ -146,7 +160,7 @@ li:hover {
 	margin-bottom: 1em;
 }
 
-.edit-btn {
+.editBtn {
 	font-family: 'Syne';
     color: black;
     text-decoration: none;
@@ -156,7 +170,7 @@ li:hover {
     gap: 10px;
 }
 
-.edit-btn i {
+.editBtn i {
 	font-size: 15px;
 }
 
@@ -234,14 +248,17 @@ button:hover {
 }
 
 input[type="submit"]{
+	display: flex;
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
-	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
+	margin: 2em auto ;
+	margin-top: 60px;
+	width: 200px;
 	text-align: center;
 	border-radius: 60px ;
+	padding: 10px;
+	background-color: #1D6154;
 }
 
 footer nav ul {
@@ -274,13 +291,13 @@ footer nav ul {
     font-weight: 500;
 }
 
-#login input {
+/* #login input {
     height: 36px;
     font-size: 1.2em;
     border: none;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
     margin-bottom: 30px;
-}
+} */
 
 #login input[type="submit"] {
     background-color: #1D6154; /* Vert Sophie Bluel */
@@ -302,5 +319,131 @@ footer nav ul {
 	color: red;
 	display: none;
 	margin: 10px;
+}
+
+.modal-title {
+	display: flex;
+	justify-content: center;
+	font-size: 26px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Fond sombre transparent */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: space-between;
+	font-size: 24px;
+}
+
+.modal-wrapper {
+    background-color: white;
+    width: 630px;
+    max-width: 100%;
+    padding: 60px 100px;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+	height: 670px;
+}
+
+.modal-line {
+	border-top: 1px solid #a7a7a7;
+	width: 70%;
+	margin-top: 47px;
+	margin-bottom: 38px;
+	margin-left: 100px;
+}
+
+.btn-modal {
+	background-color:rgba(167, 167, 167, 1) ;
+}
+
+/* Style de la galerie miniature */
+.modal-gallery {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 40px;
+	padding: 40px;
+}
+
+
+/* Icône poubelle sur les images */
+.trash-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#form-add-photos {
+	display: flex;
+	flex-direction: column;
+}
+
+.add-photo-container {
+	display: flex;
+	width: 70%;
+	height: 169px;
+	flex-direction: column;
+	justify-content: center;
+    align-items: center;
+	background-color: #E8F1F6;
+	margin: 20px 100px;
+	padding: 20px 0;
+}
+
+.add-photo-container i {
+	font-size: 80px;
+}
+
+.Wanted {
+	margin-left: 100px;
+	width: 100%;
+	gap: 20px;
+}
+
+.Wanted, input , select {
+	display: flex;
+	flex-direction: column;
+	padding: 20px 0;
+}
+
+.Wanted label {
+	font-size: 15px;
+}
+
+input, select {
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    border: none;
+}
+
+#title, #category-select {
+	width: 70%;
+}
+.btn-upload {
+	margin: 20px;
+	border: 1px solid;
+	border-radius: 50px;
+	font-size: 23px 0;
+	background-color:rgba(203, 214, 220, 1);
+	padding: 10px 33px;
+	color: rgba(48, 102, 133, 1);
 }
 

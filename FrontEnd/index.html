@@ -11,8 +11,13 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="./script.js" defer></script>
+	<script src="./modal.js" defer></script>
 </head>
 <body>
+	<div id="editionBtn" class="hidden"><i class="fa-regular fa-pen-to-square"></i>
+		<p>Mode édition</p>
+	</div>
+
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
@@ -38,7 +43,9 @@
 	</section>
 	<div class ="title-container">
 		<h2>Mes Projets</h2>
-			<a button class="edit-btn"><i class="fa-regular fa-pen-to-square"></i> Modifier</button></a>
+			<a href="#" class="editBtn"  class="js-modal-trigger modifier-link">
+				<i class="fa-regular fa-pen-to-square"></i> Modifier</button>
+			</a>
 	</div>
 		<div class="filters-container">
 		</div>
@@ -72,5 +79,53 @@
 		</ul>
 	</nav>
 </footer>
+	<aside id="modal" class="modal" aria-hidden="true" role="dialog" style="display: none;">
+    <div class="modal-wrapper js-modal-stop">
+		      <!-- Boutons de fermeture et retour -->
+        <div class="modal-actions">
+            <i class="fa-solid fa-arrow-left" id="arrow-return" style="display: none;"></i> <!-- Retour (vue 2) -->
+            <i class="fa-solid fa-xmark" id="btn-close"></i> <!-- Fermer -->
+        </div>
+
+		
+        <!-- La Galerie -->
+        <div id="modal-gallery-view">
+            <h3 class="modal-title">Galerie photo</h3>
+            <div class="modal-gallery">
+                <!-- Les images seront injectées ici par JS -->
+            </div>
+            <div class="modal-line"></div>
+            <input type="submit" class="btn-modal" value="Ajouter une photo" id="btn-add-photo-view">
+        </div>
+
+        <!-- L'ajout de photos -->
+        <div id="modal-add-view" style="display: none;">
+            <h3 class="modal-title">Ajout photo</h3>
+            
+            <form id="form-add-photo">
+                <!-- Zone d'upload -->
+                <div class="add-photo-container">
+                    <i class="fa-regular fa-image"></i>
+                    <label for="photo-upload" class="btn-upload">+ Ajouter photo</label>
+                    <input type="file" name="image" id="photo-upload" style="display:none;" accept="image/png, image/jpeg">
+                    <p>jpg, png : 4mo max</p>
+                    <img id="img-preview" src="#" alt="Aperçu" style="display:none;">
+                </div>
+			<div class="Wanted">
+                <label for="title">Titre</label>
+                <input type="text" name="title" id="title">
+			
+                <label for="category">Catégorie</label>
+                <select name="category" id="category-select">
+                    <!-- Options injectées par JS -->
+                </select>
+			</div>
+                <div class="modal-line"></div>
+				
+                <input type="submit" class="btn-modal btn-disabled" value="Valider" id="btn-validate">
+            </form>
+        </div>
+    </div>
+</aside>
 </body>
 </html>
