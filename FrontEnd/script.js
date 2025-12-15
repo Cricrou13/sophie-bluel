@@ -1,162 +1,144 @@
-let works = [];
-let categories = [];
+import { fetchAllData } from './API.js'; // NOUVEAU
+console.log("✅ script.js est bien chargé !");
+
+const SELECTORS = { // NOUVEAU
+  gallery: ".gallery",
+  filters: ".filters-container",
+  loginLink: "#nav-login a, nav ul li a[href='login.html']", 
+  editBtn: ".editBtn",
+  editionHeader: "#editionBtn"
+};
+
+let allWorks = [];
+let allCategories = [];
 
 // Fonction principale
 async function init() {
-  try {
-    // Récupération des données API
-    const worksResponse = await fetch("http://localhost:5678/api/works");
-    works = await worksResponse.json();
+  const data = await fetchAllData();
+  allWorks = data.works;
+  allCategories = data.categories;
 
-    const categoriesResponse = await fetch("http://localhost:5678/api/categories");
-    categories = await categoriesResponse.json();
+  console.log("Categories recues :" , allCategories);
 
-    // On affiche la galerie
-    displayWorks(works);
-
-    // afficher ou cacher les filtres
-    checkLoginAndDisplayFilters();
-
-  } catch (error) {
-    console.error("Erreur lors du chargement :", error);
-  }
+  renderGallery(allWorks);
+  updateAuthInterface(); 
 }
 
 // Affichage des travaux
-function displayWorks(filteredWorks) {
-  const gallery = document.querySelector(".gallery");
-  gallery.innerHTML = "";
+function createWorkElement(work) {
+  const figure = document.createElement("figure");
+  const img = document.createElement("img");
+  const figcaption = document.createElement("figcaption");
 
-  const token = localStorage.getItem('token');
-  const isLoggedIn = !!token;
+  img.src = work.imageUrl;
+  img.alt = work.title;
+  figcaption.textContent = work.title;
 
-  filteredWorks.forEach((work) => {
-    const figure = document.createElement("figure");
-    
-    const image = document.createElement("img");
-    image.src = work.imageUrl;
-    image.alt = work.title;
+  figure.appendChild(img);
+  figure.appendChild(figcaption);
 
-    const figcaption = document.createElement("figcaption");
-    figcaption.textContent = work.title;
+  return figure; //donne le résultat fini
+}
 
-    figure.appendChild(image);
-    figure.appendChild(figcaption);
-    gallery.appendChild(figure);
-    })
-  };
+// Affichage de la galerie
+function renderGallery(works) {
+    const gallery = document.querySelector(SELECTORS.gallery);
+    gallery.innerHTML = "";
 
-// Génération des filtres
-function displayFilters(categories) {
-  const filtersContainer = document.querySelector(".filters-container");
+    const fragment = document.createDocumentFragment();
 
-  // si pas de conteneur, on s'arrête
-  if (!filtersContainer) {
-    return;
-  }
-
-  filtersContainer.innerHTML = "";
-
-  // Boutons
-  const allButton = document.createElement("button");
-  allButton.textContent = "Tous";
-  allButton.classList.add("filters-buttons");
-  allButton.setAttribute("data-category", "all");
-  filtersContainer.appendChild(allButton);
-
-  // Autres boutons
-  categories.forEach((category) => {
-    const button = document.createElement("button");
-    button.textContent = category.name;
-    button.classList.add("filters-buttons");
-    button.setAttribute("data-category", category.id);
-    filtersContainer.appendChild(button);
+  works.forEach((work) => {
+    const element = createWorkElement(work);
+    fragment.appendChild(element);
   });
 
-  // Événements au clic
-  filtersContainer.addEventListener("click", (e) => {
-    if (e.target.classList.contains("filters-buttons")) {
-      const categoryId = e.target.getAttribute("data-category");
-      if (categoryId === "all") {
-        displayWorks(works);
-      } else {
-        const filtered = works.filter(
-          (work) => work.categoryId.toString() === categoryId
-        );
-        displayWorks(filtered);
-      }
-    }
+    gallery.appendChild(fragment);
+}
+
+// Génération des filtres
+function renderFilters(categories) {
+  const container = document.querySelector(SELECTORS.filters);
+  container.innerHTML = "";
+
+  const filters = [
+    {id: "all", name: "Tous"}, 
+    ...categories
+  ];
+
+  filters.forEach((filter) => {
+    const btn = document.createElement("button");
+    btn.textContent = filter.name;
+    btn.classList.add("filters-buttons");
+
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".filters-buttons").forEach(b =>b.classList.remove("active"));
+        btn.classList.add("active");
+
+        handleFilterClick(filter.id);
+    }); 
+    
+        container.appendChild(btn);
   });
 }
 
-// Gestion de la connexion et de l'affichage
-function checkLoginAndDisplayFilters() {
+ /*  FONCTIONS LOGIQUES */
+
+function handleFilterClick(categoryId) {
+  if (categoryId === "all") {
+    renderGallery(allWorks);
+
+  } else {
+    const filtered = allWorks.filter(work => work.categoryId == categoryId);
+    renderGallery(filtered);
+  }
+}
+
+function updateAuthInterface() {
+   // On récupère les éléments du DOM ICI
   const token = localStorage.getItem('token');
-  const filtersContainer = document.querySelector('.filters-container');
-  
-  const loginLink = document.getElementById("nav-login") || document.querySelector('nav ul li a[href="login.html"]');
+  const isConnected = !!token; // true si token existe, false sinon
 
-  const editBtn = document.querySelector(".editBtn");
+  const filtersContainer = document.querySelector(SELECTORS.filters);
+  const loginLink = document.querySelector(SELECTORS.loginLink);
+  const editBtn = document.querySelector(SELECTORS.editBtn);
+  const editionHeader = document.querySelector(SELECTORS.editionHeader);
 
-  const editionBtn = document.getElementById("editionBtn");
+if (isConnected) {
+    // --- MODE CONNECTÉ ---
+    if (filtersContainer) filtersContainer.style.display = 'none';
+    if (editBtn) editBtn.style.display = 'flex';
+    if (editionHeader) editionHeader.classList.remove("hidden");
 
-  console.log("editionBtn :", editionBtn);
-
-  if (token) {
-    // --- CONNECTÉ ---
-    console.log("Mode connecté activé");
-
-    // Cacher les filtres
-    if (filtersContainer) {
-      filtersContainer.style.display = 'none';
-    }
-
-    // Changer Login en Logout
     if (loginLink) {
       loginLink.textContent = 'logout';
       loginLink.href = "#";
+      
+      // Clone pour nettoyer les anciens événements
 
-      // On recrée l'élément pour supprimer les anciens écouteurs d'événements
       const newLoginLink = loginLink.cloneNode(true);
       loginLink.parentNode.replaceChild(newLoginLink, loginLink);
 
       newLoginLink.addEventListener("click", (e) => {
         e.preventDefault(); 
-        localStorage.removeItem("token"); // Supprime le token
-        window.location.reload(); // Recharge la page pour réinitialiser
+        localStorage.removeItem("token");
+        window.location.reload();
       });
     }
-
-    if (editBtn) {
-      editBtn.classList.remove("hidden");
-    }
-
   } else {
-    // --- NON CONNECTÉ ---
-    console.log("Mode visiteur activé");
-
-    // Afficher les filtres
+    // --- MODE VISITEUR ---
     if (filtersContainer) {
       filtersContainer.style.display = 'flex';
-      // C'EST ICI QU'ON APPELLE LA CRÉATION DES BOUTONS
-      displayFilters(categories); 
+      renderFilters(allCategories); // C'est ici qu'on crée les boutons !
     }
 
-    if (editBtn) {
-      editBtn.style.display='none';
-    }
+    if (editBtn) editBtn.style.display = 'none';
+    if (editionHeader) editionHeader.classList.add("hidden");
 
-    // Remettre le bouton Login normal
     if (loginLink) {
       loginLink.textContent = "login";
       loginLink.href = "login.html";
     }
+}}
 
-    if (editionBtn) {
-      editionBtn.classList.add("hidden");
-    }
-  }
-}
-
-// Lancement du script
+// Lancement
 init();
