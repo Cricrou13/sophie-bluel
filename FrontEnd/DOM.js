@@ -15,6 +15,7 @@ export function renderGallery(works) {
 
     works.forEach(work => {
         const figure = document.createElement("figure");
+        figure.id = "work_" + work.id;
         const img = document.createElement("img");
         const figcaption = document.createElement("figcaption");
 
@@ -30,7 +31,7 @@ export function renderGallery(works) {
     gallery.appendChild(fragment);
 }
 
-export function renderFilters(categories, onFilterClick) {
+export function renderFilters(categories, filterWorks) {
     const container = document.querySelector(SELECTORS.filters);
     if (!container) return;
     
@@ -50,12 +51,21 @@ export function renderFilters(categories, onFilterClick) {
             document.querySelectorAll(".filters-buttons").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             
-            // On prévient le chef d'orchestre que ça a cliqué
-            onFilterClick(filter.id);
+            // On prévient le script que ça a cliqué
+           filterWorks(filter.id);
         });
 
         container.appendChild(btn);
     });
+}
+
+function filterWorks(categoryId) {
+    if (categoryId === "all") {
+        renderGallery(allWorks);
+    } else {
+        const filtered = allWorks.filter(work => work.categoryId == categoryId);
+        renderGallery(filtered);
+    }
 }
 
 export function toggleAdminMode(isConnected, handleLogout) {
@@ -92,7 +102,7 @@ export function toggleAdminMode(isConnected, handleLogout) {
     }
 }
 
-export function renderModalCategories(categories) {
+export function renderModalCategories(categories,) {
     const select = document.getElementById("category-select");
     if (!select) return;
 

@@ -1,149 +1,157 @@
 const modal = document.getElementById("modal");
 const btnClose = document.getElementById("btn-close");
-
-document.addEventListener("click", (e) => {
-    // On vérifie si l'élément cliqué (ou un de ses parents) est le bouton d'édition
-    // Note : J'ai ajouté la compatibilité avec ton ID "editionBtn" vu dans ta console
-    const target = e.target.closest(".js-modal-trigger") || e.target.closest(".editBtn");
-
-    if (target) {
-        e.preventDefault(); // Empêcher le comportement par défaut si c'est un lien
-        const modal = document.getElementById("modal");
-
-        if (modal) {
-            modal.style.display = "flex";
-            genererGalerieModal(); // On charge les images
-        }
-    }
-});
-
-// Fermeture au clic sur la croix
-btnClose.addEventListener("click", () => {
-    modal.style.display = "none";
-});
-
-// Fermeture au clic en dehors de la boîte (sur l'overlay)
-modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-        modal.style.display = "none";
-    }
-});
-
-async function genererGalerieModal() {
-    const response = await fetch("http://localhost:5678/api/works");
-    const works = await response.json();
-    const galleryDiv = document.querySelector(".modal-gallery");
-    galleryDiv.innerHTML = ""; // Vider avant de remplir
-
-    works.forEach(work => {
-        const figure = document.createElement("figure");
-        figure.style.position = "relative"; // Pour placer l'icône
-        
-        const img = document.createElement("img");
-        img.src = work.imageUrl;
-        img.style.width = "100%";
-
-        const trashIcon = document.createElement("i");
-        trashIcon.classList.add("fa-solid", "fa-trash-can", "trash-icon");
-        trashIcon.id = work.id; // IMPORTANT : stocker l'ID pour la suppression
-
-        // Gestion de la suppression au clic
-        trashIcon.addEventListener("click", () => {
-            deleteWork(work.id); 
-        });
-
-        figure.appendChild(img);
-        figure.appendChild(trashIcon);
-        galleryDiv.appendChild(figure);
-    });
-}
-
-async function deleteWork(id) {
-    const token = localStorage.getItem("token"); // Récupérer le token
-
-    try {
-        const response = await fetch(`http://localhost:5678/api/works/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            // Recharger la galerie pour voir la disparition
-            genererGalerieModal(); 
-            // Optionnel : Mettre à jour aussi la galerie principale sans recharger la page
-        } else {
-            console.error("Erreur lors de la suppression");
-        }
-    } catch (error) {
-        console.error("Erreur réseau", error);
-    }
-}
-
 const viewGallery = document.getElementById("modal-gallery-view");
 const viewAdd = document.getElementById("modal-add-view");
 const btnAddPhoto = document.getElementById("btn-add-photo-view");
 const arrowReturn = document.getElementById("arrow-return");
 
-// Aller vers l'ajout
-btnAddPhoto.addEventListener("click", () => {
-    viewGallery.style.display = "none";
-    viewAdd.style.display = "block";
-    arrowReturn.style.display = "block"; // Afficher la flèche retour
-});
-
-// Retour vers la galerie
-arrowReturn.addEventListener("click", () => {
-    viewGallery.style.display = "block";
-    viewAdd.style.display = "none";
-    arrowReturn.style.display = "none";
-});
-
+// Éléments upload
 const inputPhoto = document.getElementById("photo-upload");
 const previewImg = document.getElementById("img-preview");
+const labelUpload = document.querySelector(".btn-upload");
+const iconImage = document.querySelector(".fa-image");
+const textInfo = document.querySelector(".add-photo-container p");
 
-inputPhoto.addEventListener("change", () => {
-    const file = inputPhoto.files[0];
-    if (file) {
-        // Créer un URL temporaire pour l'image
-        previewImg.src = URL.createObjectURL(file);
-        previewImg.style.display = "block";
-        // Cacher le label et l'icône par CSS si besoin
+ /*  1. GÉNÉRER LA GALERIE DANS LA MODALE */
+
+async function genererGalerieModal() {
+    try {
+        const response = await fetch("http://localhost:5678/api/works");
+        const works = await response.json();
+        const galleryDiv = document.querySelector(".modal-gallery");
+        
+        if (!galleryDiv) return;
+        galleryDiv.innerHTML = ""; 
+
+        works.forEach(work => {
+            const figure = document.createElement("figure");
+            // CORRECTION : On assigne l'ID exact ici
+            figure.id = `modal-photo-${work.id}`; 
+            
+            const img = document.createElement("img");
+            img.src = work.imageUrl;
+            img.alt = work.title;
+
+            const trashIcon = document.createElement("i");
+            trashIcon.classList.add("fa-solid", "fa-trash-can", "trash-icon");
+
+            // CORRECTION : On passe work.id (et pas juste id)
+            trashIcon.addEventListener("click", (e) => {
+                e.preventDefault();
+                deleteWork(work.id);
+            });
+
+            figure.appendChild(img);
+            figure.appendChild(trashIcon);
+            galleryDiv.appendChild(figure);
+        });
+    } catch (error) {
+        console.error("Erreur lors du chargement de la modale:", error);
     }
-});
+}
+window.genererGalerieModal = genererGalerieModal;
 
-const formAdd = document.getElementById("form-add-photo");
 
-formAdd.addEventListener("submit", async (e) => {
-    e.preventDefault(); // Empêcher le rechargement de la page
+/* SUPPRIMER UN PROJET */
 
-    const formData = new FormData();
-    formData.append("image", document.getElementById("photo-upload").files[0]);
-    formData.append("title", document.getElementById("title").value);
-    formData.append("category", document.getElementById("category-select").value);
-
+async function deleteWork(id) {
     const token = localStorage.getItem("token");
+    if (!confirm("Voulez-vous vraiment supprimer ce projet ?")) return;
 
     try {
-        const response = await fetch("http://localhost:5678/api/works", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}` 
-                // NE PAS METTRE 'Content-Type': 'application/json' AVEC FORMDATA
-                // Le navigateur le gère tout seul pour le multipart/form-data
-            },
-            body: formData
+        const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
         });
 
         if (response.ok) {
-            alert("Photo ajoutée avec succès !");
-            // Vider le formulaire et revenir à la galerie
-            formAdd.reset();
-            previewImg.style.display = "none";
-            // Revenir vue 1...
+            // A. Supprimer de la modale
+            const figureModal = document.getElementById(`modal-photo-${id}`);
+            if (figureModal) {
+                figureModal.remove();
+            }
+
+            // B. Supprimer de la galerie principale (id défini dans dom.js)
+            const figureMain = document.getElementById(`work_${id}`);
+            if (figureMain) {
+                figureMain.remove();
+            }
+
+            // C. Mise à jour de la variable globale pour les filtres
+            if (typeof window.removeWorkFromList === "function") {
+                window.removeWorkFromList(id);
+            }
+        } else {
+            alert("Erreur lors de la suppression.");
         }
     } catch (error) {
-        console.error(error);
+        console.error("Erreur réseau suppression:", error);
+    }
+}
+
+
+/*GESTION DES ÉVÉNEMENTS (OUVERTURE / FERMETURE) */
+
+const openModal = function (e) {
+    e.preventDefault();
+    modal.style.display = "flex";
+    modal.setAttribute("aria-hidden", "false");
+    modal.setAttribute("aria-modal", "true");
+    genererGalerieModal();
+};
+
+const closeModal = function () {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+    modal.removeAttribute("aria-modal");
+    // Reset vue modale
+    viewGallery.style.display = "block";
+    viewAdd.style.display = "none";
+    arrowReturn.style.display = "none";
+};
+
+// Listener pour ouvrir (Modifier)
+document.addEventListener("click", (e) => {
+    if (e.target.closest(".editBtn") || e.target.closest(".js-modal-trigger")) {
+        openModal(e);
     }
 });
+
+if (btnClose) btnClose.addEventListener("click", closeModal);
+
+window.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+});
+
+/* NAVIGATION INTERNE MODALE */
+
+if (btnAddPhoto) {
+    btnAddPhoto.addEventListener("click", () => {
+        viewGallery.style.display = "none";
+        viewAdd.style.display = "block";
+        arrowReturn.style.display = "block";
+    });
+}
+
+if (arrowReturn) {
+    arrowReturn.addEventListener("click", () => {
+        viewGallery.style.display = "block";
+        viewAdd.style.display = "none";
+        arrowReturn.style.display = "none";
+    });
+}
+
+// Preview image
+
+if (inputPhoto) {
+    inputPhoto.addEventListener("change", () => {
+        const file = inputPhoto.files[0];
+        if (file) {
+            previewImg.src = URL.createObjectURL(file);
+            previewImg.style.display = "block";
+            if (labelUpload) labelUpload.style.display = "none";
+            if (iconImage) iconImage.style.display = "none";
+            if (textInfo) textInfo.style.display = "none";
+        }
+    });
+}

@@ -24,6 +24,20 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
+:root {
+	--primary-color: #1D6154;
+	--secondary-color: #B1663C;
+	--accent-color: #000000;  
+    --bg-upload: #E8F1F6;       
+    --text-grey: #3D3D3D;      
+    --light-grey: #A7A7A7; 
+	--info-text:red ;
+	--ecran:#FFFEF8;
+	--basic: #FFFFFF;
+
+
+}
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
@@ -37,6 +51,7 @@ header, #filters-buttons, ul, h1 {
 body {
 	line-height: 1;
 }
+
 ol, ul {
 	list-style: none;
 }
@@ -68,9 +83,9 @@ body {
 	display: flex;
 	justify-content: center;
 	z-index: 1000;
-	margin-top: 20px 0;
+	margin-top: 20px;
 	background-color: black;
-	color: white;
+	color: var(--basic);
 	padding: 10px 0;
 }
 
@@ -92,7 +107,7 @@ h1 {
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: var(--secondary-color);
 }
 
 h1 > span {
@@ -105,7 +120,7 @@ h2 {
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: var(--primary-color);
 }
 nav ul {
 	display: flex;
@@ -115,7 +130,7 @@ nav ul {
 
 nav a {
 	text-decoration: none;
-	color: black;
+	color: var(--accent-color);
 }
 nav li {
 	padding: 0 10px;
@@ -123,7 +138,7 @@ nav li {
 }
 
 li:hover {
-	color: #B1663C;
+	color: var(--secondary-color);
 }
 
 #introduction {
@@ -162,7 +177,7 @@ li:hover {
 
 .editBtn {
 	font-family: 'Syne';
-    color: black;
+    color: var(--accent-color);
     text-decoration: none;
     cursor: pointer;
     display: flex;
@@ -183,17 +198,23 @@ li:hover {
 
 }
 
-button {
-	border: 1px solid;
+.filters-buttons {
+	background-color: transparent;
+	border: 1px solid var(--primary-color);
 	border-radius: 60px;
 	padding: 8px 20px;
 	font-size: 16px;
 	color: #1D6154;
 }
 
-button:hover {
-	background-color: #1D6154;
-	color: white;
+.filters-buttons:hover {
+	background-color: var(--primary-color);
+	color:var(--basic);
+}
+
+.active {
+	background-color: var(--primary-color);
+	color:var(--basic);
 }
 
 .gallery {
@@ -208,11 +229,6 @@ button:hover {
 .gallery img {
 	width: 90%;
 	height: 407px;
-
-}
-#contact {
-	width: 50%;
-	margin: auto;
 }
 
 #contact > * {
@@ -230,7 +246,7 @@ button:hover {
 	display: flex;
 	flex-direction: column;
 }
-
+/* Bouton vert "Envoyer */
 #contact input {
 	font-size: 1.2em;
 	border: none;
@@ -250,14 +266,14 @@ input[type="submit"]{
 	display: flex;
 	font-family: 'Syne';
 	font-weight: 700;
-	color: white;
+	color: var(--basic);
 	margin: 2em auto ;
 	margin-top: 60px;
 	width: 200px;
 	text-align: center;
 	border-radius: 60px ;
 	padding: 10px;
-	background-color: #1D6154;
+	background-color: var(--primary-color);
 }
 
 footer nav ul {
@@ -270,12 +286,13 @@ footer nav ul {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 150px; /* Pour descendre le formulaire */
-    margin-bottom: 300px; /* Pour éviter que le footer ne colle */
+    margin-top: 150px;
+    margin-bottom: 300px; 
 }
 
 #login h2 {
     margin-bottom: 30px;
+	font-family: 'Syne';
 }
 
 #login form {
@@ -289,27 +306,31 @@ footer nav ul {
     margin: 10px 0;
     font-weight: 500;
 }
-
+/* Bouton "Se connecter vert */
 #login input[type="submit"] {
-    background-color: #1D6154; /* Vert Sophie Bluel */
-    color: white;
+    background-color:var(--primary-color);
+    color: var(--basic);
     font-family: 'Syne';
     font-weight: 700;
     width: 180px;
-    margin: 20px auto; /* Centrer le bouton */
+    margin: 20px auto;
     cursor: pointer;
 }
 
 #login a {
-    color: black;
-    /* text-decoration: underline; */
+    color: var(--accent-color);
     text-align: center;
 }
 
 #error-message {
-	color: red;
+	color: var(--info-text);
 	display: none;
 	margin: 10px;
+}
+/* Logo ajout image */
+.fa-regular.fa-image {
+	font-size: 80px;
+	color:var(--light-grey);
 }
 
 .modal-title {
@@ -318,38 +339,39 @@ footer nav ul {
 	font-size: 26px;
 }
 
+p {
+	color: var(--accent-color);
+}
+
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Fond sombre transparent */
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 100;
 }
 
+.modal-gallery figure {
+    width: 100%;
+    position: relative;
+}
+
+.modal-gallery img {
+    width: 100%; 
+    height: 102px; 
+    object-fit: cover;
+    display: block;
+}
+
 .modal-actions {
 	display: flex;
 	justify-content: end;
 	font-size: 24px;
-}
-
-#modal input[type="validate"] {
-	display: flex;
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	margin: 2em auto ;
-	margin-top: 60px;
-	width: 200px;
-	text-align: center;
-	border-radius: 60px ;
-	padding: 10px;
-	background-color: #A7A7A7; /* Gris */
-    border: none;
 }
 
 #arrow-return {
@@ -366,6 +388,7 @@ footer nav ul {
     display: flex;
     flex-direction: column;
 	height: 670px;
+	position: relative;
 }
 
 .modal-line {
@@ -374,6 +397,28 @@ footer nav ul {
 	margin-top: 47px;
 	margin-bottom: 38px;
 	margin-left: 100px;
+}
+
+#btn-validate {
+	background-color: var(--light-grey);
+	display: flex;
+	font-family: 'Syne';
+	font-weight: 700;
+	color: var(--basic);
+	margin: 2em auto ;
+	margin-top: 60px;
+	width: 200px;
+	text-align: center;
+	border-radius: 60px ;
+	padding: 10px;
+	cursor: pointer;
+}
+
+#img-preview {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	position: absolute;
 }
 
 /* Style de la galerie miniature */
@@ -385,14 +430,13 @@ footer nav ul {
 	padding: 40px;
 }
 
-
 /* Icône poubelle sur les images */
 .trash-icon {
     position: absolute;
     top: 5px;
     right: 5px;
-    background-color: black;
-    color: white;
+    background-color: var(--accent-color);
+    color:var(--basic);
     padding: 5px;
     border-radius: 5px;
     cursor: pointer;
@@ -410,13 +454,12 @@ footer nav ul {
 	flex-direction: column;
 	justify-content: center;
     align-items: center;
-	background-color: #E8F1F6;
+	background-color: var(--bg-upload);
 	margin: 20px 100px;
 	padding: 20px 0;
-}
-
-.add-photo-container i {
-	font-size: 80px;
+	overflow: hidden;
+	position: relative;
+	font-size: 12px;
 }
 
 .Wanted {
@@ -445,9 +488,8 @@ input, select {
 }
 .btn-upload {
 	margin: 20px;
-	border: 1px solid;
 	border-radius: 50px;
-	font-size: 23px 0;
+	font-size: 23px;
 	background-color:rgba(203, 214, 220, 1);
 	padding: 10px 33px;
 	color: rgba(48, 102, 133, 1);

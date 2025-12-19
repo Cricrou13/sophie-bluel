@@ -1,4 +1,4 @@
-console.log("✅ API.js est bien chargé !");
+console.log("✅ api.js est bien chargé !");
 
 const API_URL = "http://localhost:5678/api";
 
@@ -21,7 +21,6 @@ export async function getWorks() {
 }
 
  /* Récupère toutes les catégories */
-/*  @returns {Promise<Array>} */
 
 export async function getCategories() {
     try {
