@@ -3,7 +3,6 @@ console.log("✅ api.js est bien chargé !");
 const API_URL = "http://localhost:5678/api";
 
 /*  * Récupère tous les travaux (Works) */
-/*  @returns {Promise<Array>} */
 
 export async function getWorks() {
     try {

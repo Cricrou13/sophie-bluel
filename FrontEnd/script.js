@@ -1,4 +1,4 @@
-import { fetchAllData, getWorks, getCategories } from './api.js'; // NOUVEAU
+import { fetchAllData, getWorks, getCategories } from './api.js';
 import {renderGallery, renderFilters, toggleAdminMode, renderModalCategories} from'./dom.js';
 console.log("✅ script.js est bien chargé !");
 console.log("dom est chargé!");
@@ -8,7 +8,7 @@ let allCategories = [];
 
 window.updateMainGallery = async function() {
     const data = await fetchAllData();
-    allWorks = data.works; // IMPORTANT : On met à jour la variable globale
+    allWorks = data.works; // On met à jour la variable globale
     renderGallery(allWorks); // On redessine la galerie
 }
 
@@ -28,7 +28,7 @@ function handleLogout() {
     window.location.reload();
 }
 
-// A. Gère l'aperçu de l'image quand on en choisit une
+// Gère l'aperçu de l'image quand on en choisit une
 function setupModalPreview() {
     const inputPhoto = document.getElementById("photo-upload");
     const previewImg = document.getElementById("img-preview");
@@ -55,26 +55,25 @@ function setupModalPreview() {
     }
 }
 
-// B. Gère l'envoi du formulaire au serveur
+// Gère l'envoi du formulaire au serveur
 function setupAddPhotoForm() {
     const inputPhoto = document.getElementById("photo-upload"); 
     const form = document.getElementById("form-add-photo");
     const titleInput = document.getElementById("title");
     const categorySelect = document.getElementById("category-select");
-    // Sélectionnez votre bouton de validation (vérifiez l'ID dans votre HTML)
    
     const btnValidate = document.getElementById("btn-validate");
 
  function checkForm() {
-    // On vérifie Si l'image est sélectionnée, si le titre n'est pas vide, et si une catégorie est choisie
+   
     if (inputPhoto.files[0] && titleInput.value.trim() !== "" && categorySelect.value !== "") {
-        // TOUT EST BON
-        btnValidate.style.backgroundColor = "#1D6154"; // Vert
-        btnValidate.disabled = false; // On active le bouton
+        // Si c'est BON
+        btnValidate.style.backgroundColor = "#1D6154";
+        btnValidate.disabled = false; 
     } else {
-        // IL MANQUE UN TRUC
-        btnValidate.style.backgroundColor = "#A7A7A7"; // Gris
-        btnValidate.disabled = true; // On désactive le bouton
+        // S'IL MANQUE UN TRUC
+        btnValidate.style.backgroundColor = "#A7A7A7"; 
+        btnValidate.disabled = true;
     }
 }   
 
@@ -158,22 +157,22 @@ function setupAddPhotoForm() {
 
 // Initialisation
 async function init() {
-    // 1. Récupération des données
+    // Récupération des données
     const data = await fetchAllData();
     allWorks = data.works;
 
-    // 2. Affichage initial de la galerie
+    // Affichage initial de la galerie
     renderGallery(allWorks);
     renderModalCategories(data.categories);
 
-    // 3. Vérification de la connexion
+    // Vérification de la connexion
     const token = localStorage.getItem('token');
     const isConnected = !!token;
 
-    // 4. Gestion de l'affichage selon le statut (Admin ou Visiteur)
+    // Gestion de l'affichage selon le statut (Admin ou Visiteur)
     toggleAdminMode(isConnected, handleLogout);
 
-    // 5. Si visiteur, on génère les filtres
+    // Si visiteur, on génère les filtres
 
     if (!isConnected) {
         // On passe les catégories ET la fonction à exécuter lors du clic

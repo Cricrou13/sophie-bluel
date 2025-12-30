@@ -1,7 +1,7 @@
 const form = document.querySelector("form");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
-const errorMessage = document.getElementById("error-message"); // La balise <p> vide
+const errorMessage = document.getElementById("error-message");
 
 // Écoute de l'événement
 form.addEventListener("submit", async (event) => {
