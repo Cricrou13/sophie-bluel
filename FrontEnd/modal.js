@@ -12,7 +12,7 @@ const labelUpload = document.querySelector(".btn-upload");
 const iconImage = document.querySelector(".fa-image");
 const textInfo = document.querySelector(".add-photo-container p");
 
- /*  1. GÉNÉRER LA GALERIE DANS LA MODALE */
+ /*  GALERIE DANS LA MODALE */
 
 async function genererGalerieModal() {
     try {
@@ -25,7 +25,6 @@ async function genererGalerieModal() {
 
         works.forEach(work => {
             const figure = document.createElement("figure");
-            // CORRECTION : On assigne l'ID exact ici
             figure.id = `modal-photo-${work.id}`; 
             
             const img = document.createElement("img");
@@ -35,7 +34,6 @@ async function genererGalerieModal() {
             const trashIcon = document.createElement("i");
             trashIcon.classList.add("fa-solid", "fa-trash-can", "trash-icon");
 
-            // CORRECTION : On passe work.id (et pas juste id)
             trashIcon.addEventListener("click", (e) => {
                 e.preventDefault();
                 deleteWork(work.id);
@@ -65,19 +63,19 @@ async function deleteWork(id) {
         });
 
         if (response.ok) {
-            // A. Supprimer de la modale
+           /*  Supprimer de la modale */
             const figureModal = document.getElementById(`modal-photo-${id}`);
             if (figureModal) {
                 figureModal.remove();
             }
 
-            // B. Supprimer de la galerie principale (id défini dans dom.js)
+          /*  Supprimer de la galerie principale (id défini dans dom.js) */
             const figureMain = document.getElementById(`work_${id}`);
             if (figureMain) {
                 figureMain.remove();
             }
 
-            // C. Mise à jour de la variable globale pour les filtres
+          /*  Mise à jour de la variable globale pour les filtres */
             if (typeof window.removeWorkFromList === "function") {
                 window.removeWorkFromList(id);
             }
@@ -141,7 +139,7 @@ if (arrowReturn) {
     });
 }
 
-// Preview image
+// Prévisualisation image
 
 if (inputPhoto) {
     inputPhoto.addEventListener("change", () => {
