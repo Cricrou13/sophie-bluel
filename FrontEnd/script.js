@@ -1,15 +1,15 @@
-import { fetchAllData, getWorks, getCategories } from './api.js';
+import { fetchAllData} from './api.js';
 import {renderGallery, renderFilters, toggleAdminMode, renderModalCategories} from'./dom.js';
 console.log("✅ script.js est bien chargé !");
 console.log("dom est chargé!");
 
 let allWorks = [];
-let allCategories = [];
 
+/* fonction qui demande à l'API les dernières données pour l'afficher */
 window.updateMainGallery = async function() {
     const data = await fetchAllData();
     allWorks = data.works; // On met à jour la variable globale
-    renderGallery(allWorks); // On redessine la galerie
+    renderGallery(allWorks); 
 }
 
 function filterWorks(categoryId) {
@@ -17,8 +17,8 @@ function filterWorks(categoryId) {
         renderGallery(allWorks);
     } else {
         // On filtre les travaux qui ont le même categoryId
-        const filtered = allWorks.filter(work => work.categoryId == categoryId);
-        renderGallery(filtered);
+        const filteredWorks = allWorks.filter(work => work.categoryId == categoryId);
+        renderGallery(filteredWorks);
     }
 }
 
@@ -33,7 +33,7 @@ function setupModalPreview() {
     const inputPhoto = document.getElementById("photo-upload");
     const previewImg = document.getElementById("img-preview");
     
-    // On cache les éléments par défaut du carré bleu (optionnel, selon ton CSS/HTML)
+    // On cache les éléments par défaut du carré bleu 
     const labelUpload = document.querySelector(".btn-upload");
     const iconImage = document.querySelector(".fa-image");
     const textInfo = document.querySelector(".add-photo-container p");
@@ -64,18 +64,19 @@ function setupAddPhotoForm() {
    
     const btnValidate = document.getElementById("btn-validate");
 
- function checkForm() {
-   
-    if (inputPhoto.files[0] && titleInput.value.trim() !== "" && categorySelect.value !== "") {
-        // Si c'est BON
-        btnValidate.style.backgroundColor = "#1D6154";
-        btnValidate.disabled = false; 
-    } else {
-        // S'IL MANQUE UN TRUC
-        btnValidate.style.backgroundColor = "#A7A7A7"; 
-        btnValidate.disabled = true;
-    }
-}   
+    /* Fonction qui vérifie si tous les champs sont remplis */
+    function checkForm() {
+    
+        if (inputPhoto.files[0] && titleInput.value.trim() !== "" && categorySelect.value !== "") {
+            // Si c'est BON
+            btnValidate.style.backgroundColor = "#1D6154";
+            btnValidate.disabled = false; 
+        } else {
+            // S'IL MANQUE UN TRUC
+            btnValidate.style.backgroundColor = "#A7A7A7"; 
+            btnValidate.disabled = true;
+        }
+    }   
 
     // On écoute le changement sur la photo
     inputPhoto.addEventListener("change", checkForm);
@@ -100,7 +101,7 @@ function setupAddPhotoForm() {
                 return;
             }
 
-            // Création du paquet de données
+            // Création du paquet de données pour ajouter des photos pour l'API
             const formData = new FormData();
             formData.append("image", imageInput.files[0]);
             formData.append("title", titleInput.value);
@@ -127,17 +128,17 @@ function setupAddPhotoForm() {
                     btnValidate.disabled = true;
 
                         // Retour vers la galerie
-                    viewGallery.style.display = "block";
+                    viewGallery.style.display = "block"; 
                     viewAdd.style.display = "none";
                     arrowReturn.style.display = "none";
 
                     // Ajouter le nouveau work à la liste et réafficher
-                    const newWork = await response.json();
-                    allWorks.push(newWork);
-                    renderGallery(allWorks);
+                    const newWork = await response.json(); /* Le serveur renvoie le projet créé avec son nouvel ID */
+                    allWorks.push(newWork);  /* On l'ajoute à notre liste locale "allWorks" */
+                    renderGallery(allWorks);   // On redessine la galerie principale
 
                     if (typeof window.genererGalerieModal === "function") {
-        window.genererGalerieModal();
+                    window.genererGalerieModal();
                     }
 
                 } else {

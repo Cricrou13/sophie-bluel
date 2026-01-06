@@ -12,7 +12,7 @@ const labelUpload = document.querySelector(".btn-upload");
 const iconImage = document.querySelector(".fa-image");
 const textInfo = document.querySelector(".add-photo-container p");
 
- /*  GALERIE DANS LA MODALE */
+ /*  Fonctions pour récupérer la galerie dans la modale avec l'icone corbeille */
 
 async function genererGalerieModal() {
     try {
